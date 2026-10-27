@@ -1,0 +1,12 @@
+{
+  "name": "Cucu Connect",
+  "short_name": "CucuConnect",
+  "description": "Digital and commerce services for the elderly and disabled",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f8fc",
+  "theme_color": "#4f46e5",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

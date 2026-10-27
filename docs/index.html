@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cucu Connect - Digital & Commerce Services for Elderly & Disabled</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#4f46e5">
+<meta name="description" content="Accessibility-first digital and commerce services for the elderly and disabled.">
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="topbar" role="banner">
+  <button class="menu-btn" id="menu-btn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+  <div class="brand"><img src="/icon.svg" alt="" width="34" height="34"><span class="brand-text">Cucu Connect</span></div>
+  <div class="topbar-actions">
+    <button class="btn ghost sm" onclick="go('notifications')" aria-label="Notifications">🔔</button>
+    <button class="btn ghost sm" onclick="go('cart')" aria-label="Cart">🛒</button>
+    <button class="btn ghost sm" onclick="go('auth')" aria-label="Account">👤</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Primary">
+    <nav class="nav">
+      <button class="nav-btn" data-route="home">🏠 Home</button>
+      <button class="nav-btn" data-route="healthcare">🩺 Healthcare</button>
+      <button class="nav-btn" data-route="bills">💳 Bills</button>
+      <button class="nav-btn" data-route="shop">🛍️ Shop</button>
+      <button class="nav-btn" data-route="therapy">🧘 Therapy</button>
+      <button class="nav-btn" data-route="medications">💊 Medications</button>
+      <button class="nav-btn" data-route="vitals">❤️ Vitals</button>
+      <button class="nav-btn" data-route="subscriptions">🔁 Subscriptions</button>
+      <button class="nav-btn" data-route="cart">🛒 Cart</button>
+      <button class="nav-btn" data-route="orders">📦 Orders</button>
+      <button class="nav-btn" data-route="notifications">🔔 Alerts</button>
+      <button class="nav-btn" data-route="profile">👤 Profile</button>
+      <button class="nav-btn" data-route="accessibility">♿ Accessibility</button>
+      <button class="nav-btn" data-route="auth">🔐 Account</button>
+      <button class="nav-btn" data-route="ussd">📱 USSD</button>
+      <button class="nav-btn" data-route="admin">🛠️ Admin</button>
+      <button class="nav-btn" data-route="provider">👨‍⚕️ Provider</button>
+      <button class="nav-btn" data-route="caregiver">🤝 Caregiver</button>
+      <button class="nav-btn" data-route="delivery">🚚 Delivery</button>
+      <button class="nav-btn sos" data-route="sos">🚨 SOS</button>
+    </nav>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main id="main" role="main" class="container">
+  <section id="view-home" class="view"></section>
+  <section id="view-healthcare" class="view" hidden></section>
+  <section id="view-bills" class="view" hidden></section>
+  <section id="view-shop" class="view" hidden></section>
+  <section id="view-therapy" class="view" hidden></section>
+  <section id="view-profile" class="view" hidden></section>
+  <section id="view-accessibility" class="view" hidden></section>
+  <section id="view-sos" class="view" hidden></section>
+  <section id="view-cart" class="view" hidden></section>
+  <section id="view-orders" class="view" hidden></section>
+  <section id="view-medications" class="view" hidden></section>
+  <section id="view-vitals" class="view" hidden></section>
+  <section id="view-subscriptions" class="view" hidden></section>
+  <section id="view-notifications" class="view" hidden></section>
+  <section id="view-admin" class="view" hidden></section>
+  <section id="view-auth" class="view" hidden></section>
+  <section id="view-ussd" class="view" hidden></section>
+  <section id="view-provider" class="view" hidden></section>
+  <section id="view-caregiver" class="view" hidden></section>
+  <section id="view-delivery" class="view" hidden></section>
+</main>
+
+</div>
+
+<footer role="contentinfo" class="footer">
+  <p>Cucu Connect - Care, Commerce & Community. Emergency: 112 / 999</p>
+</footer>
+
+<div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
+
+<script src="/client.js"></script>
+</body>
+</html>
