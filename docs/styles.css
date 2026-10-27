@@ -9,9 +9,9 @@
   --muted-2: #94a3b8;
   --border: #e2e8f0;
   --border-strong: #cbd5e1;
-  --primary: #4f46e5;
-  --primary-2: #06b6d4;
-  --primary-soft: rgba(79, 70, 229, 0.10);
+  --primary: #7c3aed;
+  --primary-2: #ec4899;
+  --primary-soft: rgba(124, 58, 237, 0.12);
   --success: #10b981;
   --success-soft: rgba(16, 185, 129, 0.12);
   --danger: #ef4444;
@@ -60,9 +60,9 @@ html { font-size: var(--font-size); scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
-  background: radial-gradient(1200px 600px at 10% -10%, rgba(79,70,229,0.12), transparent 60%),
-              radial-gradient(900px 500px at 100% 0%, rgba(6,182,212,0.12), transparent 55%),
-              radial-gradient(800px 400px at 50% 110%, rgba(16,185,129,0.08), transparent 60%),
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(124,58,237,0.16), transparent 60%),
+              radial-gradient(900px 500px at 100% 0%, rgba(236,72,153,0.16), transparent 55%),
+              radial-gradient(800px 400px at 50% 110%, rgba(245,158,11,0.10), transparent 60%),
               linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
   background-attachment: fixed;
   color: var(--text);
@@ -240,7 +240,7 @@ tbody tr:hover td { background: var(--surface-2); }
 
 /* ---------- Hero ---------- */
 .hero {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f59e0b 100%);
   color: #fff; padding: 40px 36px; border-radius: var(--radius); margin-bottom: var(--gap);
   box-shadow: var(--shadow-xl); position: relative; overflow: hidden;
 }
