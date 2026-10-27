@@ -13,7 +13,8 @@ our users include elderly and disabled people.
 
 ## Unacceptable behavior
 
-Harassment, discrimination, or any conduct that makes others feel unsafe.
+Harassment, discrimination, or any conduct that makes others feel unsafe or
+unwelcome.
 
 ## Enforcement
 

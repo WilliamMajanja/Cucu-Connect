@@ -90,3 +90,45 @@ Base URL: `http://localhost:3000`. All responses are JSON. Authenticated routes 
 
 ## USSD
 - `POST /ussd` (form-encoded: phoneNumber, text, sessionId) -> text/plain `CON`/`END` response (Africa's Talking compatible)
+## Companion – Provider
+- `GET /api/provider/appointments` (provider/admin) – scheduled appointments.
+- `POST /api/provider/appointments/status` `{id,status}` – update status
+  (scheduled, confirmed, completed, cancelled, no_show).
+
+## Companion – Caregiver
+- `GET /api/caregiver/overview/:patientId` (caregiver/admin) – patient
+  summary including appointments, medications, vitals, orders, SOS events.
+
+## Companion – Delivery
+- `GET /api/delivery/pending` (delivery/admin) – pending deliveries.
+- `POST /api/delivery/status` `{id,status}` – update status
+  (scheduled, in_transit, delivered, failed).
+
+## Admin
+- `GET /api/admin/stats` (admin)
+- `GET /api/admin/users` (admin)
+- `POST /api/subscriptions/process` (admin)
+
+## Export
+- `GET /api/export/user/:userId` (auth) – full personal data export.
+
+## USSD
+- `POST /ussd` (form-encoded: phoneNumber, text, sessionId) ->
+  text/plain `CON`/`END` response (Africa's Talking compatible).
+
+## SMS Gateway (Twilio-style)
+- `POST /sms` (form or JSON: From/Body or from/body) -> TwiML response.
+
+## WhatsApp Gateway
+- `POST /whatsapp` (form or JSON) -> JSON `{reply}`.
+
+## Webhook (Facebook Messenger)
+- `GET /webhook?hub.verify_token=...&hub.challenge=...` – verification.
+- `POST /webhook` – event receiver.
+
+## Status Enums
+- Orders: placed, confirmed, processing, shipped, delivered, cancelled.
+- Deliveries: scheduled, in_transit, delivered, failed.
+- Appointments: scheduled, confirmed, completed, cancelled, no_show.
+- Subscriptions: active, paused, cancelled.
+- Bills: unpaid, paid.

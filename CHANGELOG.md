@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.1.0] - 2026-10-27
+
+### Added
+- Caregiver companion view and navigation.
+- Sidebar navigation with mobile drawer.
+- Dashboard stat cards on home.
+- Refined design system and responsive layout.
+- Fail-closed validation across write endpoints.
+
+### Changed
+- Security, privacy, terms, contributing, code of conduct, accessibility docs expanded.
+- README and API documentation updated.
+- Service worker cache bumped to v2.
+
+### Fixed
+- Duplicate `bills` key in default data.
+- SMS TwiML escaping.
+- Cart quantity validation.
+
 ## [2.0.0] - 2026-10-26
 
 ### Added
