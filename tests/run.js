@@ -1,5 +1,8 @@
 'use strict';
 const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+try { fs.unlinkSync(path.join(process.cwd(), 'data', 'data.json')); } catch (e) {}
 const http = require('http');
 
 const PORT = 3099;
@@ -46,7 +49,6 @@ function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
   const testProductId = prodCreate.body.product.id;
 
   const me = await request('GET', '/api/auth/me', null, token);
-  console.log('ME:', me.status, JSON.stringify(me.body).slice(0,120));
   console.log('REG ID:', reg.body.user.id, 'TOKEN:', token);
   check('me', me.status === 200 && me.body.user.id === reg.body.user.id);
 
