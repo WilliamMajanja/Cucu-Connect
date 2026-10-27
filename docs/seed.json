@@ -1,0 +1,416 @@
+{
+  "users": [
+    {
+      "id": "admin",
+      "name": "Administrator",
+      "email": "williammajanja@gmail.com",
+      "password": "bd7c781d025d09a530e136e68a16fd19:3e8cc2518724794518c5463916581cfe6e0b016e3ffb4fb373f20e81d6505f6269e93531626d2d88728ede890dfcfb3a5272aea5edb2a1f9d3ea80a86e9b1eff",
+      "phone": "",
+      "role": "admin",
+      "accessibility": {
+        "fontSize": "large",
+        "contrast": "normal",
+        "voice": false
+      },
+      "caregiver": {
+        "name": "",
+        "phone": ""
+      },
+      "emergencyContacts": [],
+      "insurance": {
+        "provider": "",
+        "policy": ""
+      },
+      "createdAt": "2026-10-27T07:50:42.460Z"
+    },
+    {
+      "id": "u04e5d098ca7d",
+      "name": "T",
+      "email": "t1793087443884@t.com",
+      "password": "9b1372d0160a7e703bc4c7c612f9c290:b2d7281c6177931125c513a2d3b3907ff176285b2af22959664074aa86ba73bedba44c71289b7e1f34ac59576e142e7d0a4f03daa20d59f51f398c7ceeb18e92",
+      "phone": "",
+      "role": "customer",
+      "accessibility": {
+        "fontSize": "large",
+        "contrast": "normal",
+        "voice": false
+      },
+      "caregiver": {
+        "name": "",
+        "phone": ""
+      },
+      "emergencyContacts": [],
+      "insurance": {
+        "provider": "",
+        "policy": ""
+      },
+      "createdAt": "2026-10-27T07:50:43.943Z"
+    },
+    {
+      "id": "ub8f20b60dcce",
+      "name": "Guest",
+      "email": "",
+      "phone": "+254700000000",
+      "role": "customer",
+      "password": "",
+      "accessibility": {
+        "fontSize": "large",
+        "contrast": "normal",
+        "voice": false
+      },
+      "caregiver": {
+        "name": "",
+        "phone": ""
+      },
+      "emergencyContacts": [],
+      "insurance": {
+        "provider": "",
+        "policy": ""
+      },
+      "createdAt": "2026-10-27T07:50:44.024Z"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "tok3986427c506c",
+      "userId": "u04e5d098ca7d",
+      "expires": "2026-11-26T07:50:43.944Z"
+    },
+    {
+      "token": "tok476c6b7b2488",
+      "userId": "admin",
+      "expires": "2026-11-26T07:50:50.662Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "p1",
+      "name": "Grocery Basket (Weekly)",
+      "category": "groceries",
+      "price": 2500,
+      "description": "Fresh groceries delivered to your doorstep",
+      "stock": 50,
+      "accessible": true,
+      "tags": [
+        "weekly",
+        "essentials"
+      ]
+    },
+    {
+      "id": "p2",
+      "name": "Prescription Medicines Pack",
+      "category": "medicine",
+      "price": 1800,
+      "description": "Monthly medicine refill with reminder",
+      "stock": 30,
+      "accessible": true,
+      "tags": [
+        "medicine",
+        "refill"
+      ]
+    },
+    {
+      "id": "p3",
+      "name": "Walking Cane (Adjustable)",
+      "category": "assistive",
+      "price": 1200,
+      "description": "Lightweight adjustable walking cane",
+      "stock": 20,
+      "accessible": true,
+      "tags": [
+        "mobility"
+      ]
+    },
+    {
+      "id": "p4",
+      "name": "Wheelchair Cushion",
+      "category": "assistive",
+      "price": 3500,
+      "description": "Pressure-relief wheelchair cushion",
+      "stock": 15,
+      "accessible": true,
+      "tags": [
+        "mobility",
+        "comfort"
+      ]
+    },
+    {
+      "id": "p5",
+      "name": "Blood Pressure Monitor",
+      "category": "health",
+      "price": 4500,
+      "description": "Digital BP monitor with large display",
+      "stock": 25,
+      "accessible": true,
+      "tags": [
+        "monitoring"
+      ]
+    },
+    {
+      "id": "p6",
+      "name": "Physical Therapy Session",
+      "category": "therapy",
+      "price": 3000,
+      "description": "One-on-one physical therapy session",
+      "stock": 100,
+      "accessible": true,
+      "tags": [
+        "therapy"
+      ]
+    },
+    {
+      "id": "p7",
+      "name": "Telehealth Consultation",
+      "category": "healthcare",
+      "price": 1500,
+      "description": "Video consultation with a doctor",
+      "stock": 100,
+      "accessible": true,
+      "tags": [
+        "telehealth"
+      ]
+    },
+    {
+      "id": "p8",
+      "name": "Emergency Alert Pendant",
+      "category": "safety",
+      "price": 5000,
+      "description": "Wearable SOS alert device",
+      "stock": 40,
+      "accessible": true,
+      "tags": [
+        "safety",
+        "sos"
+      ]
+    },
+    {
+      "id": "p9",
+      "name": "Glucose Meter Kit",
+      "category": "health",
+      "price": 3200,
+      "description": "Blood glucose monitoring kit",
+      "stock": 35,
+      "accessible": true,
+      "tags": [
+        "diabetes"
+      ]
+    },
+    {
+      "id": "p10",
+      "name": "Incontinence Care Pack",
+      "category": "care",
+      "price": 2200,
+      "description": "Monthly care essentials pack",
+      "stock": 40,
+      "accessible": true,
+      "tags": [
+        "care"
+      ]
+    }
+  ],
+  "carts": {},
+  "orders": [
+    {
+      "id": "oc26e69638b85",
+      "userId": "u04e5d098ca7d",
+      "items": [
+        {
+          "productId": "p1",
+          "name": "Grocery Basket (Weekly)",
+          "price": 2500,
+          "qty": 1
+        }
+      ],
+      "total": 2500,
+      "status": "placed",
+      "address": "",
+      "deliveryDate": null,
+      "createdAt": "2026-10-27T07:50:43.967Z",
+      "updatedAt": "2026-10-27T07:50:43.967Z"
+    }
+  ],
+  "appointments": [],
+  "medications": [
+    {
+      "id": "m656b7f19ae16",
+      "userId": "u04e5d098ca7d",
+      "name": "Aspirin",
+      "dosage": "",
+      "schedule": "daily",
+      "times": [
+        "08:00"
+      ],
+      "startDate": "2026-10-27",
+      "endDate": null,
+      "notes": "",
+      "logs": [],
+      "active": true,
+      "createdAt": "2026-10-27T07:50:43.998Z"
+    }
+  ],
+  "vitals": [
+    {
+      "id": "v0e7710042a13",
+      "userId": "u04e5d098ca7d",
+      "type": "weight",
+      "value": 70,
+      "unit": "",
+      "timestamp": "2026-10-27T07:50:44.008Z",
+      "notes": ""
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "sub16abf667638e",
+      "userId": "u04e5d098ca7d",
+      "productId": "p1",
+      "frequency": "monthly",
+      "qty": 1,
+      "nextDate": "2026-11-26",
+      "status": "active",
+      "createdAt": "2026-10-27T07:50:44.012Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "ndaf129ae4d43",
+      "userId": "u04e5d098ca7d",
+      "title": "Order placed",
+      "message": "Your order oc26e69638b85 has been placed.",
+      "type": "success",
+      "read": false,
+      "createdAt": "2026-10-27T07:50:43.967Z"
+    },
+    {
+      "id": "ncbf6149737e9",
+      "userId": "u04e5d098ca7d",
+      "title": "Medication added",
+      "message": "Aspirin added to your schedule.",
+      "type": "info",
+      "read": false,
+      "createdAt": "2026-10-27T07:50:43.998Z"
+    },
+    {
+      "id": "nf1c0190b1a9f",
+      "userId": "u04e5d098ca7d",
+      "title": "SOS triggered",
+      "message": "Emergency alert recorded.",
+      "type": "danger",
+      "read": false,
+      "createdAt": "2026-10-27T07:50:44.017Z"
+    }
+  ],
+  "reviews": [],
+  "deliveries": [],
+  "bills": [
+    {
+      "id": "b1",
+      "userId": null,
+      "type": "electricity",
+      "provider": "Kenya Power",
+      "amount": 1200,
+      "dueDate": "2026-11-03",
+      "status": "unpaid"
+    },
+    {
+      "id": "b2",
+      "userId": null,
+      "type": "water",
+      "provider": "Nairobi Water",
+      "amount": 800,
+      "dueDate": "2026-11-06",
+      "status": "unpaid"
+    },
+    {
+      "id": "b3",
+      "userId": null,
+      "type": "insurance",
+      "provider": "NHIF",
+      "amount": 500,
+      "dueDate": "2026-11-10",
+      "status": "unpaid"
+    },
+    {
+      "id": "b1_u04e5d098ca7d",
+      "userId": "u04e5d098ca7d",
+      "type": "electricity",
+      "provider": "Kenya Power",
+      "amount": 1200,
+      "dueDate": "2026-11-03",
+      "status": "unpaid"
+    },
+    {
+      "id": "b2_u04e5d098ca7d",
+      "userId": "u04e5d098ca7d",
+      "type": "water",
+      "provider": "Nairobi Water",
+      "amount": 800,
+      "dueDate": "2026-11-06",
+      "status": "unpaid"
+    },
+    {
+      "id": "b3_u04e5d098ca7d",
+      "userId": "u04e5d098ca7d",
+      "type": "insurance",
+      "provider": "NHIF",
+      "amount": 500,
+      "dueDate": "2026-11-10",
+      "status": "unpaid"
+    }
+  ],
+  "messages": [
+    {
+      "type": "sos",
+      "id": "sos9b400c6ef72e",
+      "userId": "u04e5d098ca7d",
+      "location": "",
+      "time": "2026-10-27T07:50:44.017Z",
+      "contacts": []
+    },
+    {
+      "type": "sos",
+      "id": "sosafafda51ed67",
+      "userId": "ub8f20b60dcce",
+      "location": "ussd",
+      "time": "2026-10-27T07:50:44.033Z",
+      "contacts": []
+    }
+  ],
+  "services": [
+    {
+      "id": "s1",
+      "name": "Healthcare",
+      "description": "Telehealth, appointments, insurance"
+    },
+    {
+      "id": "s2",
+      "name": "Bills & Payments",
+      "description": "Pay utilities and insurance"
+    },
+    {
+      "id": "s3",
+      "name": "Commerce",
+      "description": "Groceries, medicines, assistive devices"
+    },
+    {
+      "id": "s4",
+      "name": "Physical Therapy",
+      "description": "Book therapy sessions"
+    },
+    {
+      "id": "s5",
+      "name": "Emergency SOS",
+      "description": "Emergency alert and contacts"
+    },
+    {
+      "id": "s6",
+      "name": "Medication Reminders",
+      "description": "Track and remind medications"
+    },
+    {
+      "id": "s7",
+      "name": "Vitals Tracking",
+      "description": "Track blood pressure, glucose, etc."
+    }
+  ]
+}

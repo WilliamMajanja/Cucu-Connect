@@ -1258,13 +1258,7 @@ async function init() {
   let apiAvailable = true;
   try { const r = await fetch('/api/health'); if (!r.ok) apiAvailable = false; } catch (e) { apiAvailable = false; }
   window.DEMO_MODE = !apiAvailable;
-  if (window.DEMO_MODE) {
-    const banner = document.createElement('div');
-    banner.className = 'card';
-    banner.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:90;max-width:640px;background:var(--success-soft);border:1px solid var(--success);color:var(--text);';
-    banner.innerHTML = '<strong>Demo mode:</strong> Running entirely in your browser (data saved locally).';
-    document.body.appendChild(banner);
-  }
+  // Demo mode runs silently (no banner).
   // load products cache
   try {
     const r = await api('/api/products');
