@@ -1,0 +1,25 @@
+{
+  "name": "cucu-connect",
+  "version": "2.0.0",
+  "description": "Digital and commerce services provider for the elderly and disabled",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node tests/run.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "accessibility",
+    "elderly",
+    "disabled",
+    "healthcare",
+    "commerce",
+    "pwa",
+    "zero-dependencies"
+  ],
+  "author": "Cucu Connect",
+  "license": "MIT",
+  "dependencies": {}
+}

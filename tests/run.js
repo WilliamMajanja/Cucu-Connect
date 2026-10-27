@@ -1,0 +1,110 @@
+'use strict';
+const { spawn } = require('child_process');
+const http = require('http');
+
+const PORT = 3099;
+const proc = spawn('node', ['app.js'], { env: { ...process.env, PORT: String(PORT) }, stdio: 'pipe' });
+let ready = false;
+
+function request(method, path, body, token) {
+  return new Promise((resolve, reject) => {
+    const data = body ? JSON.stringify(body) : null;
+    const opts = { hostname: '127.0.0.1', port: PORT, path, method, headers: { 'Content-Type': 'application/json' } };
+    if (token) opts.headers.Authorization = 'Bearer ' + token;
+    if (data) opts.headers['Content-Length'] = Buffer.byteLength(data);
+    const req = http.request(opts, (res) => {
+      let chunks = '';
+      res.on('data', (c) => chunks += c);
+      res.on('end', () => {
+        try { resolve({ status: res.statusCode, body: JSON.parse(chunks || '{}') }); }
+        catch { resolve({ status: res.statusCode, body: chunks }); }
+      });
+    });
+    req.on('error', reject);
+    if (data) req.write(data);
+    req.end();
+  });
+}
+
+function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+(async () => {
+  await wait(1500);
+  const results = [];
+  function check(name, cond) { results.push({ name, pass: !!cond }); }
+
+  const health = await request('GET', '/api/health');
+  check('health 200', health.status === 200 && health.body.status === 'ok');
+
+  const reg = await request('POST', '/api/auth/register', { name: 'T', email: 't' + Date.now() + '@t.com', password: 'pw' });
+  check('register', reg.status === 201 && reg.body.token);
+  const token = reg.body.token;
+
+  const me = await request('GET', '/api/auth/me', null, token);
+  check('me', me.status === 200 && me.body.user.id === reg.body.user.id);
+
+  const prods = await request('GET', '/api/products');
+  check('products', prods.status === 200 && prods.body.products.length > 0);
+
+  const cart = await request('POST', '/api/cart/add', { userId: reg.body.user.id, productId: 'p1', qty: 1 });
+  check('cart add', cart.status === 200);
+
+  const cg = await request('GET', '/api/cart/' + reg.body.user.id);
+  check('cart get', cg.status === 200 && cg.body.items.length === 1);
+
+  const co = await request('POST', '/api/checkout', { userId: reg.body.user.id });
+  check('checkout', co.status === 200 && co.body.order);
+
+  const ords = await request('GET', '/api/orders/user/' + reg.body.user.id);
+  check('orders', ords.status === 200 && ords.body.orders.length === 1);
+
+  const bill = await request('GET', '/api/bills/user/' + reg.body.user.id);
+  check('bills', bill.status === 200 && bill.body.bills.length > 0);
+
+  const med = await request('POST', '/api/medications', { userId: reg.body.user.id, name: 'Aspirin' });
+  check('med create', med.status === 201);
+
+  const vit = await request('POST', '/api/vitals', { userId: reg.body.user.id, type: 'weight', value: 70 });
+  check('vital create', vit.status === 201);
+
+  const sub = await request('POST', '/api/subscriptions', { userId: reg.body.user.id, productId: 'p1' });
+  check('sub create', sub.status === 201);
+
+  const sos = await request('POST', '/api/sos', { userId: reg.body.user.id });
+  check('sos', sos.status === 200);
+
+  const notif = await request('GET', '/api/notifications/user/' + reg.body.user.id);
+  check('notifications', notif.status === 200);
+
+  const exp = await request('GET', '/api/export/user/' + reg.body.user.id, null, token);
+  check('export', exp.status === 200);
+
+  // USSD (form-encoded)
+  const uf = (path, body) => new Promise((resolve, reject) => {
+    const data = new URLSearchParams(body).toString();
+    const req = http.request({ hostname: '127.0.0.1', port: PORT, path, method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(data) } }, (res) => {
+      let c = ''; res.on('data', (d) => c += d); res.on('end', () => resolve({ status: res.statusCode, body: c }));
+    });
+    req.on('error', reject); req.write(data); req.end();
+  });
+  const um = await uf('/ussd', { phoneNumber: '+254700000000', text: '' });
+  check('ussd main', um.status === 200 && um.body.startsWith('CON'));
+  const usos = await uf('/ussd', { phoneNumber: '+254700000000', text: '5*1' });
+  check('ussd sos', usos.status === 200 && usos.body.startsWith('END'));
+
+  const home = await request('GET', '/');
+  check('home page', home.status === 200);
+
+  proc.kill();
+  await wait(500);
+
+  const failed = results.filter((r) => !r.pass);
+  results.forEach((r) => console.log((r.pass ? 'PASS' : 'FAIL') + ' ' + r.name));
+  console.log('\n' + (results.length - failed.length) + '/' + results.length + ' passed');
+  if (failed.length) process.exit(1);
+  process.exit(0);
+})().catch((e) => {
+  console.error(e);
+  proc.kill();
+  process.exit(1);
+});
