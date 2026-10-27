@@ -43,7 +43,7 @@ npm start
 
 Open http://localhost:3000
 
-Default admin account (change in production): `admin@cucu.local` / `admin123`
+Default admin account (change in production): `williammajanja@gmail.com` / `admin123`
 
 ## Configuration
 

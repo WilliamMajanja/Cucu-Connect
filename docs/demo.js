@@ -20,7 +20,8 @@ function demoSeed() {
     { id: 'b3', userId: null, type: 'insurance', provider: 'NHIF', amount: 500, dueDate: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10), status: 'unpaid' },
   ];
   return {
-    users: [{ id: 'demo', name: 'Demo User', email: 'demo@cucu.local', password: '', phone: '', role: 'customer', accessibility: { fontSize: 'large', contrast: 'normal', voice: false }, caregiver: { name: '', phone: '' }, emergencyContacts: [], insurance: { provider: '', policy: '' }, createdAt: new Date().toISOString() }],
+    users: [{ id: 'admin', name: 'Administrator', email: 'williammajanja@gmail.com', password: '', phone: '', role: 'admin', accessibility: { fontSize: 'large', contrast: 'normal', voice: false }, caregiver: { name: '', phone: '' }, emergencyContacts: [], insurance: { provider: '', policy: '' }, createdAt: new Date().toISOString() },
+      { id: 'demo', name: 'Demo User', email: 'demo@cucu.local', password: '', phone: '', role: 'customer', accessibility: { fontSize: 'large', contrast: 'normal', voice: false }, caregiver: { name: '', phone: '' }, emergencyContacts: [], insurance: { provider: '', policy: '' }, createdAt: new Date().toISOString() }],
     sessions: [],
     products,
     carts: {},

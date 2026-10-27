@@ -11,7 +11,7 @@ function defaultData() {
       {
         id: 'admin',
         name: 'Administrator',
-        email: 'admin@cucu.local',
+        email: 'williammajanja@gmail.com',
         password: hashPassword('admin123'),
         phone: '',
         role: 'admin',

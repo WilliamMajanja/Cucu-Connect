@@ -7,7 +7,7 @@ const url = require('url');
 const store = require('./src/store');
 const ussd = require('./src/ussd');
 
-const PORT = process.env.PORT || 3000;
+const BASE_PORT = Number(process.env.PORT) || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const MIME = {
@@ -838,6 +838,17 @@ const server = http.createServer((req, res) => {
   serveStatic(req, res, pathname);
 });
 
-server.listen(PORT, () => {
-  console.log('Cucu Connect running on http://localhost:' + PORT);
-});
+function startServer(port, attempts = 0) {
+  server.listen(port, () => {
+    console.log('Cucu Connect running on http://localhost:' + port);
+  }).on('error', (err) => {
+    if (err.code === 'EADDRINUSE' && attempts < 10) {
+      console.log('Port ' + port + ' in use, trying ' + (port + 1) + '...');
+      startServer(port + 1, attempts + 1);
+    } else {
+      console.error('Failed to start server:', err.message);
+      process.exit(1);
+    }
+  });
+}
+startServer(BASE_PORT);
