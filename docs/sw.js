@@ -1,4 +1,4 @@
-const CACHE = 'cucu-v3';
+const CACHE = 'cucu-v4';
 const ASSETS = ['./', './index.html', './styles.css', './client.js', './manifest.json', './icon.svg'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).catch(() => {}));
