@@ -4,19 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cucu Connect - Digital & Commerce Services for Elderly & Disabled</title>
-<link rel="stylesheet" href="/styles.css">
-<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4f46e5">
 <meta name="description" content="Accessibility-first digital and commerce services for the elderly and disabled.">
 <script>
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="topbar" role="banner">
   <button class="menu-btn" id="menu-btn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-  <div class="brand"><img src="/icon.svg" alt="" width="34" height="34"><span class="brand-text">Cucu Connect</span></div>
+  <div class="brand"><img src="icon.svg" alt="" width="34" height="34"><span class="brand-text">Cucu Connect</span></div>
   <div class="topbar-actions">
     <button class="btn ghost sm" onclick="go('notifications')" aria-label="Notifications">🔔</button>
     <button class="btn ghost sm" onclick="go('cart')" aria-label="Cart">🛒</button>
@@ -82,6 +82,6 @@ if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').cat
 
 <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
 
-<script src="/client.js"></script>
+<script src="client.js"></script>
 </body>
 </html>
