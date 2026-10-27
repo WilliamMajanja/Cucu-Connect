@@ -97,4 +97,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.
 
 ## License
 
-MIT – see [LICENSE](LICENSE).
+Proprietary – © 2026 William Majanja. All rights reserved. See [LICENSE](LICENSE).
