@@ -138,7 +138,7 @@ function routeApi(req, res, pathname) {
 
   // ---------- health ----------
   if (pathname === '/api/health' && method === 'GET') {
-    return sendJson(res, 200, { status: 'ok', name: 'Cucu Connect', version: '2.0.0', time: new Date().toISOString(), uptime: process.uptime(), dbMode: (process.env.DB_MODE || 'json'), recentErrors: logger.recent().filter((e) => e.level === 'error').length });
+    return sendJson(res, 200, { status: 'ok', name: 'Cucu Connect', version: '3.0.0', time: new Date().toISOString(), uptime: process.uptime(), dbMode: (process.env.DB_MODE || 'json'), recentErrors: logger.recent().filter((e) => e.level === 'error').length });
   }
   if (pathname === '/api/services' && method === 'GET') {
     return sendJson(res, 200, { services: data.services });
