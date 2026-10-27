@@ -4,6 +4,7 @@ const API = '';
 let state = {
   userId: localStorage.getItem('cucu_user_id') || ('u' + Math.random().toString(36).slice(2, 10)),
   token: localStorage.getItem('cucu_token') || null,
+  csrf: null,
   user: null,
   products: [],
   cart: [],
@@ -19,6 +20,11 @@ let state = {
 };
 
 function $(sel, root = document) { return root.querySelector(sel); }
+function escapeHtml(str) {
+  return String(str == null ? '' : str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
 function toast(msg) {
@@ -37,6 +43,7 @@ async function api(path, opts = {}) {
   }
   const headers = { 'Content-Type': 'application/json' };
   if (state.token) headers['Authorization'] = 'Bearer ' + state.token;
+  if (state.csrf) headers['X-CSRF-Token'] = state.csrf;
   const res = await fetch(API + path, {
     headers,
     ...opts,
@@ -130,6 +137,8 @@ function go(route) {
   const fn = routes[route];
   if (fn) fn();
   window.scrollTo(0, 0);
+  const main = document.getElementById('main');
+  if (main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true }); }
   const sb = $('#sidebar'); const ov = $('#sidebar-overlay');
   if (sb) sb.classList.remove('open');
   if (ov) ov.classList.remove('open');
@@ -239,6 +248,7 @@ async function login() {
     state.userId = r.user.id;
     localStorage.setItem('cucu_token', r.token);
     localStorage.setItem('cucu_user_id', r.user.id);
+    try { const c = await api('/api/csrf'); state.csrf = c.csrf; } catch (e) {}
     toast('Welcome ' + r.user.name);
     speak('Welcome ' + r.user.name);
     applyAccessibility();
@@ -253,6 +263,7 @@ async function register() {
     state.userId = r.user.id;
     localStorage.setItem('cucu_token', r.token);
     localStorage.setItem('cucu_user_id', r.user.id);
+    try { const c = await api('/api/csrf'); state.csrf = c.csrf; } catch (e) {}
     toast('Account created');
     speak('Account created');
     applyAccessibility();
@@ -330,7 +341,7 @@ async function loadAppointments() {
     if (!r.appointments.length) { el.innerHTML = '<div class="empty"><p>No appointments yet.</p></div>'; return; }
     el.innerHTML = '<table><thead><tr><th>Service</th><th>Provider</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead><tbody>' +
       r.appointments.map((a) => `<tr>
-        <td>${a.service}</td><td>${a.provider || '-'}</td><td>${a.date}</td><td>${a.time}</td><td>${a.status}</td>
+        <td>${escapeHtml(a.service)}</td><td>${escapeHtml(a.provider || '-')}</td><td>${a.date}</td><td>${a.time}</td><td>${a.status}</td>
         <td>${a.status === 'scheduled' ? `<button class="btn secondary" onclick="cancelAppt('${a.id}')">Cancel</button>` : ''}</td>
       </tr>`).join('') + '</tbody></table>';
   } catch (e) { toast(e.message); }
@@ -359,7 +370,7 @@ async function loadBills() {
     if (!r.bills.length) { el.innerHTML = '<div class="empty"><p>No bills.</p></div>'; return; }
     el.innerHTML = '<table><thead><tr><th>Type</th><th>Provider</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead><tbody>' +
       r.bills.map((b) => `<tr>
-        <td>${b.type}</td><td>${b.provider}</td><td>${fmtMoney(b.amount)}</td><td>${b.dueDate}</td><td>${b.status}</td>
+        <td>${escapeHtml(b.type)}</td><td>${escapeHtml(b.provider)}</td><td>${fmtMoney(b.amount)}</td><td>${b.dueDate}</td><td>${b.status}</td>
         <td>${b.status !== 'paid' ? `<button class="btn" onclick="payBill('${b.id}')">Pay</button>` : 'Paid'}</td>
       </tr>`).join('') + '</tbody></table>';
   } catch (e) { toast(e.message); }
@@ -413,9 +424,9 @@ async function loadShopProducts() {
     const el = $('#shop-products');
     el.innerHTML = r.products.map((p) => `
       <div class="card product">
-        <h3>${p.name}</h3>
+        <h3>${escapeHtml(p.name)}</h3>
         <span class="badge">${p.category}</span>
-        <p>${p.description}</p>
+        <p>${escapeHtml(p.description)}</p>
         <div class="price">${fmtMoney(p.price)}</div>
         <p>Stock: ${p.stock}</p>
         <button class="btn" onclick="addToCart('${p.id}')">Add to Cart</button>
@@ -439,11 +450,11 @@ window.viewProduct = async function (id) {
     const html = `
       <div class="card">
         <h2>${p.name}</h2>
-        <p>${p.description}</p>
+        <p>${escapeHtml(p.description)}</p>
         <div class="price">${fmtMoney(p.price)}</div>
         <p>Stock: ${p.stock}</p>
         <h3>Reviews</h3>
-        ${reviews.length ? reviews.map((rv) => `<p><strong>${rv.rating}/5</strong> ${rv.comment}</p>`).join('') : '<div class="empty"><p>No reviews yet.</p></div>'}
+        ${reviews.length ? reviews.map((rv) => `<p><strong>${rv.rating}/5</strong> ${escapeHtml(rv.comment)}</p>`).join('') : '<div class="empty"><p>No reviews yet.</p></div>'}
         <h3>Add Review</h3>
         <label>Rating (1-5)</label><input id="rev-rating" type="number" min="1" max="5" value="5">
         <label>Comment</label><textarea id="rev-comment"></textarea>
@@ -470,8 +481,8 @@ async function loadProducts(cat, selector) {
     if (!el) return;
     el.innerHTML = r.products.map((p) => `
       <div class="card product">
-        <h3>${p.name}</h3>
-        <p>${p.description}</p>
+        <h3>${escapeHtml(p.name)}</h3>
+        <p>${escapeHtml(p.description)}</p>
         <div class="price">${fmtMoney(p.price)}</div>
         <button class="btn" onclick="addToCart('${p.id}')">Add to Cart</button>
       </div>
@@ -1131,7 +1142,32 @@ async function loadAdmin() {
       </tr>`).join('') + '</tbody></table>';
     // orders
     // fetch all orders via admin? use /api/orders/:id not list; use stats only. Load from a global? We'll load user orders not available. Skip list; show recent via subscriptions process only.
-    $('#adm-orders').innerHTML = '<p class="big">Order management available via API: POST /api/orders/status {orderId,status}.</p>';
+    const or = await api('/api/orders');
+    $('#adm-orders').innerHTML = '<table><thead><tr><th>Order</th><th>User</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody>' +
+      or.orders.map((o) => `<tr>
+        <td>${o.id}</td><td>${escapeHtml(o.userId)}</td><td>${fmtMoney(o.total)}</td><td>${o.status}</td>
+        <td><select onchange="adminOrderStatus('${o.id}', this.value)">
+          <option value="">Change</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select></td>
+      </tr>`).join('') + '</tbody></table>';
+    // users with role change
+    $('#admin-users').innerHTML = '<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead><tbody>' +
+      u.users.map((x) => `<tr>
+        <td>${escapeHtml(x.name)}</td><td>${escapeHtml(x.email)}</td><td>${x.role}</td>
+        <td><select onchange="adminUserRole('${x.id}', this.value)">
+          <option value="">Change</option>
+          <option value="customer">Customer</option>
+          <option value="caregiver">Caregiver</option>
+          <option value="provider">Provider</option>
+          <option value="delivery">Delivery</option>
+          <option value="admin">Admin</option>
+        </select></td>
+      </tr>`).join('') + '</tbody></table>';
     const u = await api('/api/admin/users');
     $('#admin-users').innerHTML = '<table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>' +
       u.users.map((x) => `<tr><td>${x.name}</td><td>${x.email}</td><td>${x.role}</td></tr>`).join('') + '</tbody></table>';
@@ -1149,6 +1185,16 @@ window.addAdminProduct = async function () {
     toast('Product added');
     loadAdmin();
   } catch (e) { toast(e.message); }
+};
+window.adminOrderStatus = async function (id, status) {
+  if (!status) return;
+  try { await api('/api/orders/status', { method: 'POST', body: { orderId: id, status } }); toast('Order updated'); loadAdmin(); }
+  catch (e) { toast(e.message); }
+};
+window.adminUserRole = async function (id, role) {
+  if (!role) return;
+  try { await api('/api/profile', { method: 'POST', body: { userId: id, role } }); toast('Role updated'); loadAdmin(); }
+  catch (e) { toast(e.message); }
 };
 window.deleteAdminProduct = async function (id) {
   try {
@@ -1331,6 +1377,7 @@ async function init() {
       state.user = r.user;
       state.userId = r.user.id;
       localStorage.setItem('cucu_user_id', r.user.id);
+      try { const c = await api('/api/csrf'); state.csrf = c.csrf; } catch (e) {}
     } catch (e) {
       state.token = null;
       localStorage.removeItem('cucu_token');

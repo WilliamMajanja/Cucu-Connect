@@ -6,6 +6,8 @@ const path = require('path');
 const url = require('url');
 const store = require('./src/store');
 const ussd = require('./src/ussd');
+const daraja = require('./src/daraja');
+const logger = require('./src/logger');
 
 const BASE_PORT = Number(process.env.PORT) || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -73,7 +75,7 @@ function getSession(req) {
   const s = (data.sessions || []).find((x) => x.token === token && new Date(x.expires) > new Date());
   if (!s) return null;
   const user = (data.users || []).find((u) => u.id === s.userId);
-  return user ? { user, token } : null;
+  return user ? { user, token, csrf: s.csrf } : null;
 }
 function requireAuth(req, res) {
   const s = getSession(req);
@@ -105,13 +107,18 @@ function addNotification(data, userId, title, message, type = 'info') {
 const rateLimitMap = new Map();
 function rateLimit(req, res) {
   const ip = req.socket.remoteAddress || 'unknown';
+  let key = ip;
+  try {
+    const tok = getToken(req);
+    if (tok) key = 'u:' + tok;
+  } catch (e) {}
   const now = Date.now();
   const windowMs = 60000;
   const max = 120;
-  const rec = rateLimitMap.get(ip) || { count: 0, reset: now + windowMs };
+  const rec = rateLimitMap.get(key) || { count: 0, reset: now + windowMs };
   if (now > rec.reset) { rec.count = 0; rec.reset = now + windowMs; }
   rec.count++;
-  rateLimitMap.set(ip, rec);
+  rateLimitMap.set(key, rec);
   if (rec.count > max) { sendJson(res, 429, { error: 'Too many requests' }); return false; }
   return true;
 }
@@ -121,10 +128,17 @@ function routeApi(req, res, pathname) {
   const method = req.method;
   const data = store.read();
   const q = url.parse(req.url, true).query;
+  // Optional CSRF enforcement (only when client sends the header)
+  if (method !== 'GET' && method !== 'HEAD' && !pathname.startsWith('/api/auth/') && pathname !== '/webhook') {
+    const sess = getSession(req);
+    if (sess && req.headers['x-csrf-token'] && req.headers['x-csrf-token'] !== sess.csrf) {
+      return sendJson(res, 403, { error: 'Invalid CSRF token' });
+    }
+  }
 
   // ---------- health ----------
   if (pathname === '/api/health' && method === 'GET') {
-    return sendJson(res, 200, { status: 'ok', name: 'Cucu Connect', version: '2.0.0', time: new Date().toISOString() });
+    return sendJson(res, 200, { status: 'ok', name: 'Cucu Connect', version: '2.0.0', time: new Date().toISOString(), uptime: process.uptime(), dbMode: (process.env.DB_MODE || 'json'), recentErrors: logger.recent().filter((e) => e.level === 'error').length });
   }
   if (pathname === '/api/services' && method === 'GET') {
     return sendJson(res, 200, { services: data.services });
@@ -152,7 +166,7 @@ function routeApi(req, res, pathname) {
       data.users.push(user);
       const token = store.uid('tok');
       data.sessions = data.sessions || [];
-      data.sessions.push({ token, userId: user.id, expires: new Date(Date.now() + 30 * 86400000).toISOString() });
+      data.sessions.push({ token, userId: user.id, csrf: store.uid('csrf'), expires: new Date(Date.now() + 30 * 86400000).toISOString() });
       store.write(data);
       const { password: _p, ...safe } = user;
       return sendJson(res, 201, { user: safe, token });
@@ -167,7 +181,7 @@ function routeApi(req, res, pathname) {
       data.sessions = data.sessions || [];
       // prune old sessions for user
       data.sessions = data.sessions.filter((s) => s.userId !== user.id);
-      data.sessions.push({ token, userId: user.id, expires: new Date(Date.now() + 30 * 86400000).toISOString() });
+      data.sessions.push({ token, userId: user.id, csrf: store.uid('csrf'), expires: new Date(Date.now() + 30 * 86400000).toISOString() });
       store.write(data);
       const { password: _p, ...safe } = user;
       return sendJson(res, 200, { user: safe, token });
@@ -188,16 +202,29 @@ function routeApi(req, res, pathname) {
     const { password: _p, ...safe } = s.user;
     return sendJson(res, 200, { user: safe });
   }
+  if (pathname === '/api/csrf' && method === 'GET') {
+    const s = getSession(req);
+    if (!s) return sendJson(res, 401, { error: 'Not authenticated' });
+    return sendJson(res, 200, { csrf: s.csrf });
+  }
 
   // ---------- products ----------
   if (pathname === '/api/products' && method === 'GET') {
-    let list = data.products || [];
+    let list = (data.products || []).filter((p) => !p.deletedAt || q.includeDeleted === '1');
     if (q.category) list = list.filter((p) => p.category === q.category);
     if (q.q) {
       const needle = String(q.q).toLowerCase();
       list = list.filter((p) => (p.name + ' ' + p.description + ' ' + (p.tags || []).join(' ')).toLowerCase().includes(needle));
     }
     if (q.tag) list = list.filter((p) => (p.tags || []).includes(q.tag));
+    if (q.page) {
+      const page = Math.max(1, Number(q.page) || 1);
+      const limit = Math.min(100, Math.max(1, Number(q.limit) || 50));
+      const total = list.length;
+      const pages = Math.max(1, Math.ceil(total / limit));
+      const start = (page - 1) * limit;
+      return sendJson(res, 200, { products: list.slice(start, start + limit), total, page, pages });
+    }
     return sendJson(res, 200, { products: list });
   }
   const prodMatch = pathname.match(/^\/api\/products\/([^/]+)$/);
@@ -223,9 +250,11 @@ function routeApi(req, res, pathname) {
       }).catch((e) => sendJson(res, 400, { error: e.message }));
     }
     if (method === 'DELETE') {
-      data.products = (data.products || []).filter((x) => x.id !== pid);
+      const p = (data.products || []).find((x) => x.id === pid);
+      if (!p) return sendJson(res, 404, { error: 'Not found' });
+      p.deletedAt = new Date().toISOString();
       store.write(data);
-      return sendJson(res, 200, { ok: true });
+      return sendJson(res, 200, { ok: true, softDeleted: true });
     }
   }
   if (pathname === '/api/products' && method === 'POST') {
@@ -313,10 +342,38 @@ function routeApi(req, res, pathname) {
   }
 
   // ---------- orders ----------
+  if (pathname === '/api/orders' && method === 'GET') {
+    const s = requireAdmin(req, res);
+    if (!s) return;
+    let list = (data.orders || []).filter((o) => !o.deletedAt || q.includeDeleted === '1');
+    if (q.status) list = list.filter((o) => o.status === q.status);
+    if (q.q) { const n = String(q.q).toLowerCase(); list = list.filter((o) => (o.id + ' ' + o.userId).toLowerCase().includes(n)); }
+    if (q.page) {
+      const page = Math.max(1, Number(q.page) || 1);
+      const limit = Math.min(100, Math.max(1, Number(q.limit) || 50));
+      const total = list.length;
+      const pages = Math.max(1, Math.ceil(total / limit));
+      const start = (page - 1) * limit;
+      return sendJson(res, 200, { orders: list.slice(start, start + limit), total, page, pages });
+    }
+    return sendJson(res, 200, { orders: list });
+  }
+
   const ordersUserMatch = pathname.match(/^\/api\/orders\/user\/([^/]+)$/);
   if (ordersUserMatch && method === 'GET') {
     const userId = decodeURIComponent(ordersUserMatch[1]);
     return sendJson(res, 200, { orders: (data.orders || []).filter((o) => o.userId === userId) });
+  }
+  const orderDeleteMatch = pathname.match(/^\/api\/orders\/([^/]+)$/);
+  if (orderDeleteMatch && method === 'DELETE') {
+    const s = requireAdmin(req, res);
+    if (!s) return;
+    const oid = decodeURIComponent(orderDeleteMatch[1]);
+    const o = (data.orders || []).find((x) => x.id === oid);
+    if (!o) return sendJson(res, 404, { error: 'Not found' });
+    o.deletedAt = new Date().toISOString();
+    store.write(data);
+    return sendJson(res, 200, { ok: true, softDeleted: true });
   }
   const orderDetailMatch = pathname.match(/^\/api\/orders\/([^/]+)$/);
   if (orderDetailMatch && method === 'GET') {
@@ -415,6 +472,7 @@ function routeApi(req, res, pathname) {
       if (!userId) return sendJson(res, 400, { error: 'userId required' });
       const u = getUser(data, userId);
       if (rest.name !== undefined) u.name = rest.name;
+      if (rest.role !== undefined && ['customer','caregiver','provider','delivery','admin'].includes(rest.role)) u.role = rest.role;
       if (rest.phone !== undefined) u.phone = rest.phone;
       if (rest.email !== undefined) u.email = rest.email;
       if (rest.accessibility) u.accessibility = { ...u.accessibility, ...rest.accessibility };
@@ -665,7 +723,76 @@ function routeApi(req, res, pathname) {
     return sendJson(res, 200, { users });
   }
 
+  // ---------- payments (Daraja) ----------
+  if (pathname === '/api/payments/mpesa/stkpush' && method === 'POST') {
+    if (!daraja.isConfigured()) return sendJson(res, 503, { error: 'M-Pesa not configured' });
+    return parseBody(req).then(async (body) => {
+      const { phone, amount, accountRef, description } = body;
+      if (!phone || !amount) return sendJson(res, 400, { error: 'phone and amount required' });
+      try {
+        const r = await daraja.stkPush({ phone, amount, accountRef, description });
+        if (r.status !== 200) return sendJson(res, r.status, r.body);
+        // record pending transaction
+        data.mpesaTransactions = data.mpesaTransactions || [];
+        data.mpesaTransactions.push({ checkoutRequestId: r.body.CheckoutRequestID, phone, amount, status: 'pending', createdAt: new Date().toISOString() });
+        store.write(data);
+        return sendJson(res, 200, r.body);
+      } catch (e) { return sendJson(res, 500, { error: e.message }); }
+    }).catch((e) => sendJson(res, 400, { error: e.message }));
+  }
+  if (pathname === '/api/payments/mpesa/callback' && method === 'POST') {
+    return parseBody(req).then((body) => {
+      const stk = body.Body && body.Body.stkCallback;
+      if (!stk) return sendJson(res, 400, { error: 'invalid callback' });
+      const checkoutId = stk.CheckoutRequestID;
+      const txs = data.mpesaTransactions || [];
+      const tx = txs.find((t) => t.checkoutRequestId === checkoutId);
+      if (stk.ResultCode === 0) {
+        if (tx) { tx.status = 'success'; tx.mpesaReceipt = (stk.CallbackMetadata && stk.CallbackMetadata.Item && stk.CallbackMetadata.Item.find((i) => i.Name === 'MpesaReceiptNumber')?.Value) || ''; }
+        // mark related bill paid if accountRef matches bill id
+        const meta = stk.CallbackMetadata && stk.CallbackMetadata.Item ? stk.CallbackMetadata.Item : [];
+        const acc = meta.find((i) => i.Name === 'AccountReference');
+        if (acc && acc.Value) {
+          const bill = (data.bills || []).find((b) => b.id === acc.Value);
+          if (bill) { bill.status = 'paid'; bill.paidAt = new Date().toISOString(); }
+        }
+        store.write(data);
+        return sendJson(res, 200, { ok: true, status: 'success' });
+      }
+      if (tx) tx.status = 'failed';
+      store.write(data);
+      return sendJson(res, 200, { ok: true, status: 'failed', reason: stk.ResultDesc });
+    }).catch((e) => sendJson(res, 400, { error: e.message }));
+  }
+  const mpesaStatusMatch = pathname.match(/^\/api\/payments\/mpesa\/status\/([^/]+)$/);
+  if (mpesaStatusMatch && method === 'GET') {
+    const id = decodeURIComponent(mpesaStatusMatch[1]);
+    const tx = (data.mpesaTransactions || []).find((t) => t.checkoutRequestId === id);
+    if (!tx) return sendJson(res, 404, { error: 'transaction not found' });
+    return sendJson(res, 200, { transaction: tx });
+  }
+
   // ---------- export ----------
+  if (pathname === '/api/admin/logs' && method === 'GET') {
+    const s = requireAdmin(req, res);
+    if (!s) return;
+    return sendJson(res, 200, { logs: logger.recent() });
+  }
+  if (pathname === '/api/admin/backup' && method === 'GET') {
+    const s = requireAdmin(req, res);
+    if (!s) return;
+    return sendJson(res, 200, { data: store.read() });
+  }
+  if (pathname === '/api/admin/restore' && method === 'POST') {
+    const s = requireAdmin(req, res);
+    if (!s) return;
+    return parseBody(req).then((body) => {
+      if (!body.data) return sendJson(res, 400, { error: 'data required' });
+      store.write(body.data);
+      return sendJson(res, 200, { ok: true });
+    }).catch((e) => sendJson(res, 400, { error: e.message }));
+  }
+
   const exportUserMatch = pathname.match(/^\/api\/export\/user\/([^/]+)$/);
   if (exportUserMatch && method === 'GET') {
     const userId = decodeURIComponent(exportUserMatch[1]);
@@ -823,7 +950,10 @@ const server = http.createServer((req, res) => {
     return;
   }
   if (pathname.startsWith('/api/') || pathname === '/webhook') {
-    try { routeApi(req, res, pathname); } catch (e) { sendJson(res, 500, { error: e.message }); }
+    const start = Date.now();
+    const origEnd = res.end.bind(res);
+    res.end = (chunk) => { logger.info('request', { method: req.method, path: pathname, status: res.statusCode, ms: Date.now() - start }); return origEnd(chunk); };
+    try { routeApi(req, res, pathname); } catch (e) { logger.error('route error', { path: pathname, error: e.message }); sendJson(res, 500, { error: e.message }); }
     return;
   }
   serveStatic(req, res, pathname);

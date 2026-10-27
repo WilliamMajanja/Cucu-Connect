@@ -1,5 +1,5 @@
-const CACHE = 'cucu-v4';
-const ASSETS = ['./', './index.html', './styles.css', './client.js', './manifest.json', './icon.svg'];
+const CACHE = 'cucu-v5';
+const ASSETS = ['./', './index.html', './styles.css', './client.js', './demo.js', './seed.json', './manifest.json', './icon.svg', './offline.html'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).catch(() => {}));
   self.skipWaiting();
@@ -9,5 +9,9 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 self.addEventListener('fetch', (e) => {
-  e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request)));
+  if (e.request.mode === 'navigate') {
+    e.respondWith(fetch(e.request).catch(() => caches.match('./offline.html')));
+    return;
+  }
+  e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request).catch(() => caches.match('./offline.html'))));
 });
