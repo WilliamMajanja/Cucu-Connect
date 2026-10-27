@@ -4,7 +4,7 @@
       "id": "admin",
       "name": "Administrator",
       "email": "williammajanja@gmail.com",
-      "password": "834a7fce98ae8efa7555a4957fbde464:6a9d38738eacfed1ac0081dd602a1e966eb7436fc4e51675d511f3fb421eb7d22a15b1158d4c3d0a25200b887cade718d9c04cf836504447d4324712c0ca03ae",
+      "password": "ed5b7fbcafe7d995686958591e191b12:109ee050738793c9d95707e40726277ec942ffbb2565eeeffcbb213f6f9d358eef429937d463ec8e7ebf332048c8392eecfa0bf218391ed2727ed138ddf3f43d",
       "phone": "",
       "role": "admin",
       "accessibility": {
@@ -21,136 +21,11 @@
         "provider": "",
         "policy": ""
       },
-      "createdAt": "2026-10-27T08:00:26.942Z"
+      "createdAt": "2026-10-27T08:07:30.473Z"
     }
   ],
   "sessions": [],
-  "products": [
-    {
-      "id": "p1",
-      "name": "Grocery Basket (Weekly)",
-      "category": "groceries",
-      "price": 2500,
-      "description": "Fresh groceries delivered to your doorstep",
-      "stock": 50,
-      "accessible": true,
-      "tags": [
-        "weekly",
-        "essentials"
-      ]
-    },
-    {
-      "id": "p2",
-      "name": "Prescription Medicines Pack",
-      "category": "medicine",
-      "price": 1800,
-      "description": "Monthly medicine refill with reminder",
-      "stock": 30,
-      "accessible": true,
-      "tags": [
-        "medicine",
-        "refill"
-      ]
-    },
-    {
-      "id": "p3",
-      "name": "Walking Cane (Adjustable)",
-      "category": "assistive",
-      "price": 1200,
-      "description": "Lightweight adjustable walking cane",
-      "stock": 20,
-      "accessible": true,
-      "tags": [
-        "mobility"
-      ]
-    },
-    {
-      "id": "p4",
-      "name": "Wheelchair Cushion",
-      "category": "assistive",
-      "price": 3500,
-      "description": "Pressure-relief wheelchair cushion",
-      "stock": 15,
-      "accessible": true,
-      "tags": [
-        "mobility",
-        "comfort"
-      ]
-    },
-    {
-      "id": "p5",
-      "name": "Blood Pressure Monitor",
-      "category": "health",
-      "price": 4500,
-      "description": "Digital BP monitor with large display",
-      "stock": 25,
-      "accessible": true,
-      "tags": [
-        "monitoring"
-      ]
-    },
-    {
-      "id": "p6",
-      "name": "Physical Therapy Session",
-      "category": "therapy",
-      "price": 3000,
-      "description": "One-on-one physical therapy session",
-      "stock": 100,
-      "accessible": true,
-      "tags": [
-        "therapy"
-      ]
-    },
-    {
-      "id": "p7",
-      "name": "Telehealth Consultation",
-      "category": "healthcare",
-      "price": 1500,
-      "description": "Video consultation with a doctor",
-      "stock": 100,
-      "accessible": true,
-      "tags": [
-        "telehealth"
-      ]
-    },
-    {
-      "id": "p8",
-      "name": "Emergency Alert Pendant",
-      "category": "safety",
-      "price": 5000,
-      "description": "Wearable SOS alert device",
-      "stock": 40,
-      "accessible": true,
-      "tags": [
-        "safety",
-        "sos"
-      ]
-    },
-    {
-      "id": "p9",
-      "name": "Glucose Meter Kit",
-      "category": "health",
-      "price": 3200,
-      "description": "Blood glucose monitoring kit",
-      "stock": 35,
-      "accessible": true,
-      "tags": [
-        "diabetes"
-      ]
-    },
-    {
-      "id": "p10",
-      "name": "Incontinence Care Pack",
-      "category": "care",
-      "price": 2200,
-      "description": "Monthly care essentials pack",
-      "stock": 40,
-      "accessible": true,
-      "tags": [
-        "care"
-      ]
-    }
-  ],
+  "products": [],
   "carts": {},
   "orders": [],
   "appointments": [],

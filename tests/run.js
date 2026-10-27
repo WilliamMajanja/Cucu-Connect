@@ -40,13 +40,19 @@ function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
   check('register', reg.status === 201 && reg.body.token);
   const token = reg.body.token;
 
+  // admin seed product for catalog tests
+  const adminLoginEarly = await request('POST', '/api/auth/login', { email: 'williammajanja@gmail.com', password: 'admin123' });
+  const adminTokenEarly = adminLoginEarly.body.token;
+  const prodCreate = await request('POST', '/api/products', { name: 'Test Product', price: 100, category: 'general', stock: 5 }, adminTokenEarly);
+  const testProductId = prodCreate.body.product.id;
+
   const me = await request('GET', '/api/auth/me', null, token);
   check('me', me.status === 200 && me.body.user.id === reg.body.user.id);
 
   const prods = await request('GET', '/api/products');
   check('products', prods.status === 200 && prods.body.products.length > 0);
 
-  const cart = await request('POST', '/api/cart/add', { userId: reg.body.user.id, productId: 'p1', qty: 1 });
+  const cart = await request('POST', '/api/cart/add', { userId: reg.body.user.id, productId: testProductId, qty: 1 });
   check('cart add', cart.status === 200);
 
   const cg = await request('GET', '/api/cart/' + reg.body.user.id);
@@ -67,7 +73,7 @@ function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
   const vit = await request('POST', '/api/vitals', { userId: reg.body.user.id, type: 'weight', value: 70 });
   check('vital create', vit.status === 201);
 
-  const sub = await request('POST', '/api/subscriptions', { userId: reg.body.user.id, productId: 'p1' });
+  const sub = await request('POST', '/api/subscriptions', { userId: reg.body.user.id, productId: testProductId });
   check('sub create', sub.status === 201);
 
   const sos = await request('POST', '/api/sos', { userId: reg.body.user.id });

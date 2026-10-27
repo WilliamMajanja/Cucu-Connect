@@ -1077,33 +1077,87 @@ function renderAdmin() {
   v.innerHTML = `
     <h1>Admin Dashboard</h1>
     <div class="card" id="admin-stats"></div>
+
+    <div class="card">
+      <h2>Manage Products</h2>
+      <div class="grid" style="grid-template-columns:1fr 1fr;">
+        <div>
+          <label>Name</label><input id="adm-p-name">
+          <label>Category</label><input id="adm-p-cat" value="general">
+          <label>Price</label><input id="adm-p-price" type="number" step="0.01">
+          <label>Stock</label><input id="adm-p-stock" type="number">
+          <label>Description</label><textarea id="adm-p-desc"></textarea>
+          <button class="btn" id="adm-p-add">Add Product</button>
+        </div>
+        <div id="adm-products"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Orders</h2>
+      <div id="adm-orders"></div>
+    </div>
+
     <div class="card">
       <h2>Users</h2>
       <div id="admin-users"></div>
     </div>
+
     <div class="card">
       <h2>Process Subscriptions</h2>
       <button class="btn" onclick="processSubs()">Run</button>
     </div>
   `;
+  $('#adm-p-add').addEventListener('click', addAdminProduct);
   loadAdmin();
 }
 async function loadAdmin() {
   try {
     const r = await api('/api/admin/stats');
     $('#admin-stats').innerHTML = `
-      <p>Users: ${r.users}</p>
-      <p>Products: ${r.products}</p>
-      <p>Orders: ${r.orders}</p>
-      <p>Appointments: ${r.appointments}</p>
-      <p>Revenue: ${fmtMoney(r.revenue)}</p>
-      <p>Unread Notifications: ${r.unreadNotifications}</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="num">${r.users}</div><div class="label">Users</div></div>
+        <div class="stat"><div class="num">${r.products}</div><div class="label">Products</div></div>
+        <div class="stat"><div class="num">${r.orders}</div><div class="label">Orders</div></div>
+        <div class="stat"><div class="num">${fmtMoney(r.revenue)}</div><div class="label">Revenue</div></div>
+      </div>
     `;
+    // products
+    const pr = await api('/api/products');
+    $('#adm-products').innerHTML = '<table><thead><tr><th>Name</th><th>Price</th><th>Stock</th><th></th></tr></thead><tbody>' +
+      pr.products.map((p) => `<tr>
+        <td>${p.name}</td><td>${fmtMoney(p.price)}</td><td>${p.stock}</td>
+        <td><button class="btn danger sm" onclick="deleteAdminProduct('${p.id}')">Delete</button></td>
+      </tr>`).join('') + '</tbody></table>';
+    // orders
+    // fetch all orders via admin? use /api/orders/:id not list; use stats only. Load from a global? We'll load user orders not available. Skip list; show recent via subscriptions process only.
+    $('#adm-orders').innerHTML = '<p class="big">Order management available via API: POST /api/orders/status {orderId,status}.</p>';
     const u = await api('/api/admin/users');
     $('#admin-users').innerHTML = '<table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>' +
       u.users.map((x) => `<tr><td>${x.name}</td><td>${x.email}</td><td>${x.role}</td></tr>`).join('') + '</tbody></table>';
   } catch (e) { toast(e.message || 'Admin access required'); }
 }
+window.addAdminProduct = async function () {
+  try {
+    await api('/api/products', { method: 'POST', body: {
+      name: $('#adm-p-name').value,
+      category: $('#adm-p-cat').value,
+      price: Number($('#adm-p-price').value),
+      stock: Number($('#adm-p-stock').value),
+      description: $('#adm-p-desc').value,
+    }});
+    toast('Product added');
+    loadAdmin();
+  } catch (e) { toast(e.message); }
+};
+window.deleteAdminProduct = async function (id) {
+  try {
+    await api('/api/products/' + encodeURIComponent(id), { method: 'DELETE' });
+    toast('Product deleted');
+    loadAdmin();
+  } catch (e) { toast(e.message); }
+};
+
 window.processSubs = async function () {
   try {
     const r = await api('/api/subscriptions/process', { method: 'POST', body: {} });

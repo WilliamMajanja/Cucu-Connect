@@ -23,7 +23,7 @@ function defaultData() {
       },
     ],
     sessions: [],
-    products: seedProducts(),
+    products: [],
     carts: {},
     orders: [],
     appointments: [],
@@ -45,21 +45,6 @@ function defaultData() {
       { id: 's7', name: 'Vitals Tracking', description: 'Track blood pressure, glucose, etc.' },
     ],
   };
-}
-
-function seedProducts() {
-  return [
-    { id: 'p1', name: 'Grocery Basket (Weekly)', category: 'groceries', price: 2500, description: 'Fresh groceries delivered to your doorstep', stock: 50, accessible: true, tags: ['weekly', 'essentials'] },
-    { id: 'p2', name: 'Prescription Medicines Pack', category: 'medicine', price: 1800, description: 'Monthly medicine refill with reminder', stock: 30, accessible: true, tags: ['medicine', 'refill'] },
-    { id: 'p3', name: 'Walking Cane (Adjustable)', category: 'assistive', price: 1200, description: 'Lightweight adjustable walking cane', stock: 20, accessible: true, tags: ['mobility'] },
-    { id: 'p4', name: 'Wheelchair Cushion', category: 'assistive', price: 3500, description: 'Pressure-relief wheelchair cushion', stock: 15, accessible: true, tags: ['mobility', 'comfort'] },
-    { id: 'p5', name: 'Blood Pressure Monitor', category: 'health', price: 4500, description: 'Digital BP monitor with large display', stock: 25, accessible: true, tags: ['monitoring'] },
-    { id: 'p6', name: 'Physical Therapy Session', category: 'therapy', price: 3000, description: 'One-on-one physical therapy session', stock: 100, accessible: true, tags: ['therapy'] },
-    { id: 'p7', name: 'Telehealth Consultation', category: 'healthcare', price: 1500, description: 'Video consultation with a doctor', stock: 100, accessible: true, tags: ['telehealth'] },
-    { id: 'p8', name: 'Emergency Alert Pendant', category: 'safety', price: 5000, description: 'Wearable SOS alert device', stock: 40, accessible: true, tags: ['safety', 'sos'] },
-    { id: 'p9', name: 'Glucose Meter Kit', category: 'health', price: 3200, description: 'Blood glucose monitoring kit', stock: 35, accessible: true, tags: ['diabetes'] },
-    { id: 'p10', name: 'Incontinence Care Pack', category: 'care', price: 2200, description: 'Monthly care essentials pack', stock: 40, accessible: true, tags: ['care'] },
-  ];
 }
 
 function ensure() {
