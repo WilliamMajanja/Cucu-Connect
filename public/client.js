@@ -178,10 +178,9 @@ function renderHome() {
       </div>
     </div>
     <div class="stat-grid" style="margin-bottom:var(--gap);">
-      <div class="stat"><div class="num" id="stat-products">${(state.products||[]).length || 10}</div><div class="label">Products</div></div>
+      <div class="stat"><div class="num" id="stat-products">${(state.products||[]).length}</div><div class="label">Products</div></div>
       <div class="stat"><div class="num" id="stat-cart">${(state.cart||[]).length}</div><div class="label">Cart Items</div></div>
       <div class="stat"><div class="num" id="stat-notifs">${(state.notifications||[]).length}</div><div class="label">Notifications</div></div>
-      <div class="stat"><div class="num">24/7</div><div class="label">Support</div></div>
     </div>
     <div class="grid">
       <div class="card"><h2>Healthcare</h2><p>Telehealth consultations, appointments, insurance.</p><button class="btn" onclick="go('healthcare')">Open</button></div>
