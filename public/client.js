@@ -27,6 +27,24 @@ function escapeHtml(str) {
 }
 function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
+function confetti() {
+  const colors = ['#4f46e5','#06b6d4','#10b981','#f59e0b','#ef4444'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;top:50%;left:50%;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:300;';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    document.body.appendChild(el);
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 100 + Math.random() * 200;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+    el.animate([
+      { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+      { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0)`, opacity: 0 },
+    ], { duration: 900 + Math.random()*400, easing: 'cubic-bezier(.22,1,.36,1)' });
+    setTimeout(() => el.remove(), 1400);
+  }
+}
 function toast(msg) {
   const t = $('#toast');
   t.textContent = msg;
@@ -782,6 +800,7 @@ async function checkout() {
     const r = await api('/api/checkout', { method: 'POST', body: { userId: state.userId, address: $('#cart-addr').value, deliveryDate: $('#cart-date').value } });
     toast('Order placed: ' + r.order.id);
     speak('Order placed');
+    confetti();
     go('orders');
   } catch (e) { toast(e.message); }
 }

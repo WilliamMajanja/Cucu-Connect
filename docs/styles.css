@@ -60,9 +60,11 @@ html { font-size: var(--font-size); scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
-  background: radial-gradient(1200px 600px at 10% -10%, rgba(79,70,229,0.08), transparent 60%),
-              radial-gradient(900px 500px at 100% 0%, rgba(6,182,212,0.08), transparent 55%),
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(79,70,229,0.12), transparent 60%),
+              radial-gradient(900px 500px at 100% 0%, rgba(6,182,212,0.12), transparent 55%),
+              radial-gradient(800px 400px at 50% 110%, rgba(16,185,129,0.08), transparent 60%),
               linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+  background-attachment: fixed;
   color: var(--text);
   line-height: 1.65;
   min-height: 100vh;
@@ -135,6 +137,7 @@ p { margin: 0 0 10px; }
   padding: 24px; margin-bottom: var(--gap); box-shadow: var(--shadow);
   transition: box-shadow .25s var(--ease), transform .25s var(--ease), border-color .25s var(--ease);
   position: relative; overflow: hidden;
+  transform: translateZ(0);
 }
 .card:hover { box-shadow: var(--shadow-lg); border-color: var(--border-strong); }
 .card.glass { background: rgba(255,255,255,0.6); backdrop-filter: blur(12px); }
@@ -374,3 +377,6 @@ body.contrast-high .sidebar { background: var(--surface); }
 @media (max-width: 768px) {
   .container { padding-bottom: 96px; }
 }
+
+@keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+.pop { animation: popIn .35s var(--ease); }
