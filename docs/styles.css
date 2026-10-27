@@ -349,3 +349,28 @@ body.contrast-high .sidebar { background: var(--surface); }
   .topbar { position: sticky; top: 0; }
   .brand { flex: 1; }
 }
+
+
+/* ---------- Mobile bottom nav ---------- */
+ .bottom-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 75;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border);
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  grid-template-columns: repeat(5, 1fr); gap: 4px;
+}
+@media (max-width: 768px) { .bottom-nav { display: grid; } }
+.bn-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; padding: 8px 4px; min-height: 56px; border: none; background: transparent;
+  color: var(--muted); font-size: 1.25rem; cursor: pointer; border-radius: 12px;
+  transition: all .18s var(--ease);
+}
+.bn-btn span { font-size: .72rem; font-weight: 600; }
+.bn-btn.active { color: var(--primary); background: var(--primary-soft); }
+.bn-btn.sos { color: var(--danger); }
+.bn-btn.sos.active { background: var(--danger-soft); color: var(--danger); }
+@media (max-width: 768px) {
+  .container { padding-bottom: 96px; }
+}

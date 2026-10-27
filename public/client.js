@@ -126,6 +126,7 @@ function go(route) {
   const el = $('#view-' + route);
   if (el) el.hidden = false;
   $$('.nav-btn').forEach((b) => b.classList.toggle('active', b.dataset.route === route));
+  $$('.bn-btn').forEach((b) => b.classList.toggle('active', b.dataset.route === route));
   const fn = routes[route];
   if (fn) fn();
   window.scrollTo(0, 0);
@@ -1289,6 +1290,7 @@ async function init() {
   }
   applyAccessibility();
   $$('.nav-btn').forEach((b) => b.addEventListener('click', () => go(b.dataset.route)));
+  $$('.bn-btn').forEach((b) => b.addEventListener('click', () => go(b.dataset.route)));
   const menuBtn = $('#menu-btn'); const sidebar = $('#sidebar'); const overlay = $('#sidebar-overlay');
   if (menuBtn && sidebar) {
     menuBtn.addEventListener('click', () => {
