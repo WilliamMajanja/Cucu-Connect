@@ -1,29 +1,5 @@
 {
-  "users": [
-    {
-      "id": "admin",
-      "name": "Administrator",
-      "email": "williammajanja@gmail.com",
-      "password": "ed5b7fbcafe7d995686958591e191b12:109ee050738793c9d95707e40726277ec942ffbb2565eeeffcbb213f6f9d358eef429937d463ec8e7ebf332048c8392eecfa0bf218391ed2727ed138ddf3f43d",
-      "phone": "",
-      "role": "admin",
-      "accessibility": {
-        "fontSize": "large",
-        "contrast": "normal",
-        "voice": false
-      },
-      "caregiver": {
-        "name": "",
-        "phone": ""
-      },
-      "emergencyContacts": [],
-      "insurance": {
-        "provider": "",
-        "policy": ""
-      },
-      "createdAt": "2026-10-27T08:07:30.473Z"
-    }
-  ],
+  "users": [],
   "sessions": [],
   "products": [],
   "carts": {},
@@ -37,41 +13,5 @@
   "deliveries": [],
   "bills": [],
   "messages": [],
-  "services": [
-    {
-      "id": "s1",
-      "name": "Healthcare",
-      "description": "Telehealth, appointments, insurance"
-    },
-    {
-      "id": "s2",
-      "name": "Bills & Payments",
-      "description": "Pay utilities and insurance"
-    },
-    {
-      "id": "s3",
-      "name": "Commerce",
-      "description": "Groceries, medicines, assistive devices"
-    },
-    {
-      "id": "s4",
-      "name": "Physical Therapy",
-      "description": "Book therapy sessions"
-    },
-    {
-      "id": "s5",
-      "name": "Emergency SOS",
-      "description": "Emergency alert and contacts"
-    },
-    {
-      "id": "s6",
-      "name": "Medication Reminders",
-      "description": "Track and remind medications"
-    },
-    {
-      "id": "s7",
-      "name": "Vitals Tracking",
-      "description": "Track blood pressure, glucose, etc."
-    }
-  ]
+  "services": []
 }

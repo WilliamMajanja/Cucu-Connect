@@ -7,43 +7,22 @@ const DATA_FILE = path.join(process.cwd(), 'data', 'data.json');
 
 function defaultData() {
   return {
-    users: [
-      {
-        id: 'admin',
-        name: 'Administrator',
-        email: 'williammajanja@gmail.com',
-        password: hashPassword('admin123'),
-        phone: '',
-        role: 'admin',
-        accessibility: { fontSize: 'large', contrast: 'normal', voice: false },
-        caregiver: { name: '', phone: '' },
-        emergencyContacts: [],
-        insurance: { provider: '', policy: '' },
-        createdAt: new Date().toISOString(),
-      },
-    ],
+    users: [],
     sessions: [],
     products: [],
     carts: {},
     orders: [],
     appointments: [],
+    bills: [],
     medications: [],
     vitals: [],
     subscriptions: [],
     notifications: [],
     reviews: [],
     deliveries: [],
-    bills: [],
     messages: [],
-    services: [
-      { id: 's1', name: 'Healthcare', description: 'Telehealth, appointments, insurance' },
-      { id: 's2', name: 'Bills & Payments', description: 'Pay utilities and insurance' },
-      { id: 's3', name: 'Commerce', description: 'Groceries, medicines, assistive devices' },
-      { id: 's4', name: 'Physical Therapy', description: 'Book therapy sessions' },
-      { id: 's5', name: 'Emergency SOS', description: 'Emergency alert and contacts' },
-      { id: 's6', name: 'Medication Reminders', description: 'Track and remind medications' },
-      { id: 's7', name: 'Vitals Tracking', description: 'Track blood pressure, glucose, etc.' },
-    ],
+    services: [],
+    mpesaTransactions: [],
   };
 }
 

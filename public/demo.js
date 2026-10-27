@@ -35,7 +35,8 @@ async function demoApi(path, opts) {
   if (url === '/api/auth/register' && method === 'POST') {
     if (!body.name || !body.email || !body.password) return json(400, { error: 'name, email, password required' });
     if ((data.users || []).some((u) => u.email === String(body.email).toLowerCase())) return json(409, { error: 'Email already registered' });
-    const user = { id: uid('u'), name: body.name, email: String(body.email).toLowerCase(), password: '', phone: body.phone || '', role: (['customer','caregiver','provider','delivery'].includes(body.role) ? body.role : 'customer'), accessibility: { fontSize: 'large', contrast: 'normal', voice: false }, caregiver: { name: '', phone: '' }, emergencyContacts: [], insurance: { provider: '', policy: '' }, createdAt: new Date().toISOString() };
+    const isFirst = (data.users || []).length === 0;
+    const user = { id: uid('u'), name: body.name, email: String(body.email).toLowerCase(), password: '', phone: body.phone || '', role: isFirst ? 'admin' : (['customer','caregiver','provider','delivery'].includes(body.role) ? body.role : 'customer'), accessibility: { fontSize: 'large', contrast: 'normal', voice: false }, caregiver: { name: '', phone: '' }, emergencyContacts: [], insurance: { provider: '', policy: '' }, createdAt: new Date().toISOString() };
     data.users.push(user);
     const token = uid('tok');
     data.sessions = data.sessions || [];

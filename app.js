@@ -73,6 +73,7 @@ function getSession(req) {
   const token = getToken(req);
   if (!token) return null;
   const s = (data.sessions || []).find((x) => x.token === token && new Date(x.expires) > new Date());
+
   if (!s) return null;
   const user = (data.users || []).find((u) => u.id === s.userId);
   return user ? { user, token, csrf: s.csrf } : null;
@@ -150,13 +151,14 @@ function routeApi(req, res, pathname) {
       const { name, email, password, phone, role } = body;
       if (!name || !email || !password) return sendJson(res, 400, { error: 'name, email, password required' });
       if ((data.users || []).some((u) => u.email === email.toLowerCase())) return sendJson(res, 409, { error: 'Email already registered' });
+      const isFirst = (data.users || []).length === 0;
       const user = {
         id: store.uid('u'),
         name,
         email: email.toLowerCase(),
         password: store.hashPassword(password),
         phone: phone || '',
-        role: (['customer','caregiver','provider','delivery'].includes(role) ? role : 'customer'),
+        role: isFirst ? 'admin' : (['customer','caregiver','provider','delivery'].includes(role) ? role : 'customer'),
         accessibility: { fontSize: 'large', contrast: 'normal', voice: false },
         caregiver: { name: '', phone: '' },
         emergencyContacts: [],

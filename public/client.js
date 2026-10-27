@@ -165,41 +165,24 @@ function go(route) {
 function fmtMoney(n) { return 'KES ' + Number(n).toLocaleString(); }
 
 // ---------- Home ----------
-function renderHome() {
+async function renderHome() {
   const v = $('#view-home');
+  let services = [];
+  try { const r = await api('/api/services'); services = r.services || []; } catch (e) {}
+  const cards = services.map((svc) => `
+    <div class="card"><h2>${escapeHtml(svc.name)}</h2><p>${escapeHtml(svc.description)}</p></div>
+  `).join('') || '<div class="empty"><p>No services configured. Add services via admin.</p></div>';
   v.innerHTML = `
     <div class="hero">
       <h1>Welcome to Cucu Connect</h1>
-      <p>Digital and commerce services for the elderly and disabled — healthcare, bills, shopping, therapy, and emergency support.</p>
-      <div class="btn-row" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
-        <button class="btn" onclick="go('shop')">Start Shopping</button>
-        <button class="btn secondary" onclick="go('healthcare')">Book Care</button>
-        <button class="btn secondary" onclick="go('sos')">Emergency SOS</button>
-      </div>
+      <p>Digital and commerce services for the elderly and disabled.</p>
     </div>
     <div class="stat-grid" style="margin-bottom:var(--gap);">
       <div class="stat"><div class="num" id="stat-products">${(state.products||[]).length}</div><div class="label">Products</div></div>
       <div class="stat"><div class="num" id="stat-cart">${(state.cart||[]).length}</div><div class="label">Cart Items</div></div>
       <div class="stat"><div class="num" id="stat-notifs">${(state.notifications||[]).length}</div><div class="label">Notifications</div></div>
     </div>
-    <div class="grid">
-      <div class="card"><h2>Healthcare</h2><p>Telehealth consultations, appointments, insurance.</p><button class="btn" onclick="go('healthcare')">Open</button></div>
-      <div class="card"><h2>Bills & Payments</h2><p>Pay electricity, water, insurance.</p><button class="btn" onclick="go('bills')">Open</button></div>
-      <div class="card"><h2>Shop</h2><p>Groceries, medicines, assistive devices.</p><button class="btn" onclick="go('shop')">Open</button></div>
-      <div class="card"><h2>Physical Therapy</h2><p>Book therapy sessions at home.</p><button class="btn" onclick="go('therapy')">Open</button></div>
-      <div class="card"><h2>Medications</h2><p>Reminders and adherence tracking.</p><button class="btn" onclick="go('medications')">Open</button></div>
-      <div class="card"><h2>Vitals</h2><p>Track BP, glucose and more.</p><button class="btn" onclick="go('vitals')">Open</button></div>
-      <div class="card"><h2>Emergency SOS</h2><p>Alert caregivers and emergency contacts.</p><button class="btn danger" onclick="go('sos')">Open</button></div>
-      <div class="card"><h2>Accessibility</h2><p>Adjust text size, contrast, voice.</p><button class="btn secondary" onclick="go('accessibility')">Open</button></div>
-    </div>
-    <div class="card">
-      <h2>Quick Actions</h2>
-      <button class="btn" onclick="go('cart')">View Cart</button>
-      <button class="btn secondary" onclick="go('orders')">My Orders</button>
-      <button class="btn secondary" onclick="go('notifications')">Notifications</button>
-      <button class="btn secondary" onclick="go('profile')">My Profile</button>
-      <button class="btn secondary" onclick="go('auth')">Account</button>
-    </div>
+    <div class="grid">${cards}</div>
   `;
   speak('Welcome to Cucu Connect');
   updateNotifBadge();
@@ -409,17 +392,7 @@ function renderShop() {
     <div class="card">
       <input id="shop-search" placeholder="Search products..." />
       <label>Category</label>
-      <select id="shop-cat">
-        <option value="">All</option>
-        <option value="groceries">Groceries</option>
-        <option value="medicine">Medicine</option>
-        <option value="assistive">Assistive Devices</option>
-        <option value="health">Health Devices</option>
-        <option value="therapy">Therapy</option>
-        <option value="safety">Safety</option>
-        <option value="healthcare">Healthcare</option>
-        <option value="care">Care</option>
-      </select>
+      <select id="shop-cat"><option value="">All</option></select>
     </div>
     <div class="grid" id="shop-products"></div>
     <div class="card">
@@ -438,6 +411,11 @@ async function loadShopProducts() {
   if (q) params.set('q', q);
   try {
     const r = await api('/api/products?' + params.toString());
+    const catSel = $('#shop-cat');
+    if (catSel && catSel.options.length <= 1) {
+      const cats = [...new Set((r.products || []).map((p) => p.category))];
+      cats.forEach((c) => { const o = document.createElement('option'); o.value = c; o.textContent = c; catSel.appendChild(o); });
+    }
     const el = $('#shop-products');
     el.innerHTML = r.products.map((p) => `
       <div class="card product">
