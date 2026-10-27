@@ -1111,12 +1111,12 @@ window.processSubs = async function () {
   } catch (e) { toast(e.message); }
 };
 
-// ---------- USSD Simulator ----------
+// ---------- USSD Companion ----------
 function renderUSSD() {
   const v = $('#view-ussd');
   v.innerHTML = `
-    <h1>USSD Simulator</h1>
-    <p class="big">Simulate a USSD session (*123#). Enter your phone number and inputs separated by *.</p>
+    <h1>USSD Companion</h1>
+    <p class="big">Interact with the Cucu Connect USSD service (*123#) for feature phones.</p>
     <div class="card">
       <label>Phone Number</label>
       <input id="ussd-phone" value="+254700000000">

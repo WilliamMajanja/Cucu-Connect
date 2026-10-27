@@ -33,11 +33,7 @@ function defaultData() {
     notifications: [],
     reviews: [],
     deliveries: [],
-    bills: [
-      { id: 'b1', userId: null, type: 'electricity', provider: 'Kenya Power', amount: 1200, dueDate: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10), status: 'unpaid' },
-      { id: 'b2', userId: null, type: 'water', provider: 'Nairobi Water', amount: 800, dueDate: new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10), status: 'unpaid' },
-      { id: 'b3', userId: null, type: 'insurance', provider: 'NHIF', amount: 500, dueDate: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10), status: 'unpaid' },
-    ],
+    bills: [],
     messages: [],
     services: [
       { id: 's1', name: 'Healthcare', description: 'Telehealth, appointments, insurance' },

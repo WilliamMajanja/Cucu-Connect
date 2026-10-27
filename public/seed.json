@@ -4,7 +4,7 @@
       "id": "admin",
       "name": "Administrator",
       "email": "williammajanja@gmail.com",
-      "password": "bd7c781d025d09a530e136e68a16fd19:3e8cc2518724794518c5463916581cfe6e0b016e3ffb4fb373f20e81d6505f6269e93531626d2d88728ede890dfcfb3a5272aea5edb2a1f9d3ea80a86e9b1eff",
+      "password": "834a7fce98ae8efa7555a4957fbde464:6a9d38738eacfed1ac0081dd602a1e966eb7436fc4e51675d511f3fb421eb7d22a15b1158d4c3d0a25200b887cade718d9c04cf836504447d4324712c0ca03ae",
       "phone": "",
       "role": "admin",
       "accessibility": {
@@ -21,67 +21,10 @@
         "provider": "",
         "policy": ""
       },
-      "createdAt": "2026-10-27T07:50:42.460Z"
-    },
-    {
-      "id": "u04e5d098ca7d",
-      "name": "T",
-      "email": "t1793087443884@t.com",
-      "password": "9b1372d0160a7e703bc4c7c612f9c290:b2d7281c6177931125c513a2d3b3907ff176285b2af22959664074aa86ba73bedba44c71289b7e1f34ac59576e142e7d0a4f03daa20d59f51f398c7ceeb18e92",
-      "phone": "",
-      "role": "customer",
-      "accessibility": {
-        "fontSize": "large",
-        "contrast": "normal",
-        "voice": false
-      },
-      "caregiver": {
-        "name": "",
-        "phone": ""
-      },
-      "emergencyContacts": [],
-      "insurance": {
-        "provider": "",
-        "policy": ""
-      },
-      "createdAt": "2026-10-27T07:50:43.943Z"
-    },
-    {
-      "id": "ub8f20b60dcce",
-      "name": "Guest",
-      "email": "",
-      "phone": "+254700000000",
-      "role": "customer",
-      "password": "",
-      "accessibility": {
-        "fontSize": "large",
-        "contrast": "normal",
-        "voice": false
-      },
-      "caregiver": {
-        "name": "",
-        "phone": ""
-      },
-      "emergencyContacts": [],
-      "insurance": {
-        "provider": "",
-        "policy": ""
-      },
-      "createdAt": "2026-10-27T07:50:44.024Z"
+      "createdAt": "2026-10-27T08:00:26.942Z"
     }
   ],
-  "sessions": [
-    {
-      "token": "tok3986427c506c",
-      "userId": "u04e5d098ca7d",
-      "expires": "2026-11-26T07:50:43.944Z"
-    },
-    {
-      "token": "tok476c6b7b2488",
-      "userId": "admin",
-      "expires": "2026-11-26T07:50:50.662Z"
-    }
-  ],
+  "sessions": [],
   "products": [
     {
       "id": "p1",
@@ -209,173 +152,16 @@
     }
   ],
   "carts": {},
-  "orders": [
-    {
-      "id": "oc26e69638b85",
-      "userId": "u04e5d098ca7d",
-      "items": [
-        {
-          "productId": "p1",
-          "name": "Grocery Basket (Weekly)",
-          "price": 2500,
-          "qty": 1
-        }
-      ],
-      "total": 2500,
-      "status": "placed",
-      "address": "",
-      "deliveryDate": null,
-      "createdAt": "2026-10-27T07:50:43.967Z",
-      "updatedAt": "2026-10-27T07:50:43.967Z"
-    }
-  ],
+  "orders": [],
   "appointments": [],
-  "medications": [
-    {
-      "id": "m656b7f19ae16",
-      "userId": "u04e5d098ca7d",
-      "name": "Aspirin",
-      "dosage": "",
-      "schedule": "daily",
-      "times": [
-        "08:00"
-      ],
-      "startDate": "2026-10-27",
-      "endDate": null,
-      "notes": "",
-      "logs": [],
-      "active": true,
-      "createdAt": "2026-10-27T07:50:43.998Z"
-    }
-  ],
-  "vitals": [
-    {
-      "id": "v0e7710042a13",
-      "userId": "u04e5d098ca7d",
-      "type": "weight",
-      "value": 70,
-      "unit": "",
-      "timestamp": "2026-10-27T07:50:44.008Z",
-      "notes": ""
-    }
-  ],
-  "subscriptions": [
-    {
-      "id": "sub16abf667638e",
-      "userId": "u04e5d098ca7d",
-      "productId": "p1",
-      "frequency": "monthly",
-      "qty": 1,
-      "nextDate": "2026-11-26",
-      "status": "active",
-      "createdAt": "2026-10-27T07:50:44.012Z"
-    }
-  ],
-  "notifications": [
-    {
-      "id": "ndaf129ae4d43",
-      "userId": "u04e5d098ca7d",
-      "title": "Order placed",
-      "message": "Your order oc26e69638b85 has been placed.",
-      "type": "success",
-      "read": false,
-      "createdAt": "2026-10-27T07:50:43.967Z"
-    },
-    {
-      "id": "ncbf6149737e9",
-      "userId": "u04e5d098ca7d",
-      "title": "Medication added",
-      "message": "Aspirin added to your schedule.",
-      "type": "info",
-      "read": false,
-      "createdAt": "2026-10-27T07:50:43.998Z"
-    },
-    {
-      "id": "nf1c0190b1a9f",
-      "userId": "u04e5d098ca7d",
-      "title": "SOS triggered",
-      "message": "Emergency alert recorded.",
-      "type": "danger",
-      "read": false,
-      "createdAt": "2026-10-27T07:50:44.017Z"
-    }
-  ],
+  "medications": [],
+  "vitals": [],
+  "subscriptions": [],
+  "notifications": [],
   "reviews": [],
   "deliveries": [],
-  "bills": [
-    {
-      "id": "b1",
-      "userId": null,
-      "type": "electricity",
-      "provider": "Kenya Power",
-      "amount": 1200,
-      "dueDate": "2026-11-03",
-      "status": "unpaid"
-    },
-    {
-      "id": "b2",
-      "userId": null,
-      "type": "water",
-      "provider": "Nairobi Water",
-      "amount": 800,
-      "dueDate": "2026-11-06",
-      "status": "unpaid"
-    },
-    {
-      "id": "b3",
-      "userId": null,
-      "type": "insurance",
-      "provider": "NHIF",
-      "amount": 500,
-      "dueDate": "2026-11-10",
-      "status": "unpaid"
-    },
-    {
-      "id": "b1_u04e5d098ca7d",
-      "userId": "u04e5d098ca7d",
-      "type": "electricity",
-      "provider": "Kenya Power",
-      "amount": 1200,
-      "dueDate": "2026-11-03",
-      "status": "unpaid"
-    },
-    {
-      "id": "b2_u04e5d098ca7d",
-      "userId": "u04e5d098ca7d",
-      "type": "water",
-      "provider": "Nairobi Water",
-      "amount": 800,
-      "dueDate": "2026-11-06",
-      "status": "unpaid"
-    },
-    {
-      "id": "b3_u04e5d098ca7d",
-      "userId": "u04e5d098ca7d",
-      "type": "insurance",
-      "provider": "NHIF",
-      "amount": 500,
-      "dueDate": "2026-11-10",
-      "status": "unpaid"
-    }
-  ],
-  "messages": [
-    {
-      "type": "sos",
-      "id": "sos9b400c6ef72e",
-      "userId": "u04e5d098ca7d",
-      "location": "",
-      "time": "2026-10-27T07:50:44.017Z",
-      "contacts": []
-    },
-    {
-      "type": "sos",
-      "id": "sosafafda51ed67",
-      "userId": "ub8f20b60dcce",
-      "location": "ussd",
-      "time": "2026-10-27T07:50:44.033Z",
-      "contacts": []
-    }
-  ],
+  "bills": [],
+  "messages": [],
   "services": [
     {
       "id": "s1",

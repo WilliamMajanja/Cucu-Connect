@@ -373,16 +373,7 @@ function routeApi(req, res, pathname) {
   const billsUserMatch = pathname.match(/^\/api\/bills\/user\/([^/]+)$/);
   if (billsUserMatch && method === 'GET') {
     const userId = decodeURIComponent(billsUserMatch[1]);
-    let userBills = (data.bills || []).filter((b) => b.userId === userId);
-    if (userBills.length === 0) {
-      const seeds = (data.bills || []).filter((b) => b.userId === null);
-      seeds.forEach((s) => {
-        const nb = { ...s, id: s.id + '_' + userId, userId };
-        data.bills.push(nb);
-      });
-      store.write(data);
-      userBills = (data.bills || []).filter((b) => b.userId === userId);
-    }
+    const userBills = (data.bills || []).filter((b) => b.userId === userId);
     return sendJson(res, 200, { bills: userBills });
   }
   if (pathname === '/api/bills/pay' && method === 'POST') {
@@ -851,4 +842,9 @@ function startServer(port, attempts = 0) {
     }
   });
 }
+process.on('uncaughtException', (err) => { console.error('Uncaught exception:', err); });
+process.on('unhandledRejection', (err) => { console.error('Unhandled rejection:', err); });
+process.on('SIGTERM', () => { console.log('Shutting down...'); server.close(() => process.exit(0)); });
+process.on('SIGINT', () => { console.log('Shutting down...'); server.close(() => process.exit(0)); });
+
 startServer(BASE_PORT);

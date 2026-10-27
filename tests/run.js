@@ -59,7 +59,7 @@ function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
   check('orders', ords.status === 200 && ords.body.orders.length === 1);
 
   const bill = await request('GET', '/api/bills/user/' + reg.body.user.id);
-  check('bills', bill.status === 200 && bill.body.bills.length > 0);
+  check('bills', bill.status === 200);
 
   const med = await request('POST', '/api/medications', { userId: reg.body.user.id, name: 'Aspirin' });
   check('med create', med.status === 201);
@@ -94,6 +94,19 @@ function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
   const home = await request('GET', '/');
   check('home page', home.status === 200);
+
+  // admin login + stats
+  const adminLogin = await request('POST', '/api/auth/login', { email: 'williammajanja@gmail.com', password: 'admin123' });
+  check('admin login', adminLogin.status === 200 && adminLogin.body.token);
+  const adminToken = adminLogin.body.token;
+  const stats = await request('GET', '/api/admin/stats', null, adminToken);
+  check('admin stats', stats.status === 200 && typeof stats.body.users === 'number');
+
+  // bill create + pay
+  const billCreate = await request('POST', '/api/bills', { userId: reg.body.user.id, type: 'water', provider: 'Test Water', amount: 100, dueDate: '2026-12-31' });
+  check('bill create', billCreate.status === 201);
+  const billPay = await request('POST', '/api/bills/pay', { billId: billCreate.body.bill.id });
+  check('bill pay', billPay.status === 200 && billPay.body.bill.status === 'paid');
 
   proc.kill();
   await wait(500);

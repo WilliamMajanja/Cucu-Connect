@@ -71,14 +71,7 @@ function handle(body) {
   if (l1 === '2') {
     if (!l2) {
       const data = store.read();
-      let bills = (data.bills || []).filter((b) => b.userId === user.id);
-      if (!bills.length) {
-        (data.bills || []).filter((b) => b.userId === null).forEach((s) => {
-          data.bills.push({ ...s, id: s.id + '_' + user.id, userId: user.id });
-        });
-        store.write(data);
-        bills = (data.bills || []).filter((b) => b.userId === user.id);
-      }
+      const bills = (data.bills || []).filter((b) => b.userId === user.id);
       const unpaid = bills.filter((b) => b.status !== 'paid');
       if (!unpaid.length) return end('No unpaid bills. Thank you!');
       return con('Unpaid bills:\n' + unpaid.map((b, i) => (i + 1) + '. ' + b.type + ' ' + b.provider + ' KES ' + b.amount).join('\n') + '\nSelect number to pay:');
