@@ -30,6 +30,11 @@ function toast(msg) {
 }
 
 async function api(path, opts = {}) {
+  if (window.DEMO_MODE && typeof window.demoApi === 'function') {
+    const r = await window.demoApi(path, opts || {});
+    if (r.status >= 400) throw new Error((r.body && r.body.error) || 'Error');
+    return r.body;
+  }
   const headers = { 'Content-Type': 'application/json' };
   if (state.token) headers['Authorization'] = 'Bearer ' + state.token;
   const res = await fetch(API + path, {
@@ -1251,11 +1256,12 @@ async function init() {
   // detect static-only hosting (e.g. GitHub Pages) where the API is unavailable
   let apiAvailable = true;
   try { const r = await fetch('/api/health'); if (!r.ok) apiAvailable = false; } catch (e) { apiAvailable = false; }
-  if (!apiAvailable) {
+  window.DEMO_MODE = !apiAvailable;
+  if (window.DEMO_MODE) {
     const banner = document.createElement('div');
     banner.className = 'card';
-    banner.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:90;max-width:640px;background:var(--warning-soft);border:1px solid var(--warning);color:var(--text);';
-    banner.innerHTML = '<strong>Static preview:</strong> This GitHub Pages build shows the UI only. Run <code>npm start</code> locally for live data and APIs.';
+    banner.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:90;max-width:640px;background:var(--success-soft);border:1px solid var(--success);color:var(--text);';
+    banner.innerHTML = '<strong>Demo mode:</strong> Running entirely in your browser (data saved locally).';
     document.body.appendChild(banner);
   }
   // load products cache
