@@ -1248,6 +1248,16 @@ window.delStatus = async function (id, status) {
 
 // ---------- Init ----------
 async function init() {
+  // detect static-only hosting (e.g. GitHub Pages) where the API is unavailable
+  let apiAvailable = true;
+  try { await fetch('/api/health'); } catch (e) { apiAvailable = false; }
+  if (!apiAvailable) {
+    const banner = document.createElement('div');
+    banner.className = 'card';
+    banner.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:90;max-width:640px;background:var(--warning-soft);border:1px solid var(--warning);color:var(--text);';
+    banner.innerHTML = '<strong>Static preview:</strong> This GitHub Pages build shows the UI only. Run <code>npm start</code> locally for live data and APIs.';
+    document.body.appendChild(banner);
+  }
   // load products cache
   try {
     const r = await api('/api/products');
