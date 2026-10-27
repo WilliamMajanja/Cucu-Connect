@@ -1250,7 +1250,7 @@ window.delStatus = async function (id, status) {
 async function init() {
   // detect static-only hosting (e.g. GitHub Pages) where the API is unavailable
   let apiAvailable = true;
-  try { await fetch('/api/health'); } catch (e) { apiAvailable = false; }
+  try { const r = await fetch('/api/health'); if (!r.ok) apiAvailable = false; } catch (e) { apiAvailable = false; }
   if (!apiAvailable) {
     const banner = document.createElement('div');
     banner.className = 'card';
